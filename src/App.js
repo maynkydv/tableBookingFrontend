@@ -12,6 +12,7 @@ import BookingForm from './components/BookingForm';
 import AddRestaurant from './pages/Admin/AddRestaurant';
 import AdminValid from './pages/Auth/AdminValid';
 import AllUsersPage from './pages/Admin/AllUsers';
+import RestaurantBookings from './pages/Admin/RestaurantBookings';
 
 function App() {
 
@@ -35,6 +36,7 @@ function App() {
           {/* Admin */}
           <Route path="/add-restaurant" element={<AddRestaurant />} />
           <Route path="/users" element={<AllUsersPage />} />
+          <Route path="/restaurant/:restaurantId/bookings" element={<RestaurantBookings />} />
 
           {/* <Route path="/edit-restaurant" element={<Home />} />
           <Route path="/admin/users" element={<Home />} /> */}

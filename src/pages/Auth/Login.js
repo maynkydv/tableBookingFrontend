@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { serverOrigin } from '../../utils/constant';
+import serverOrigin from '../../utils/constant';
 import { useNavigate } from 'react-router-dom';
 import { toast, } from "react-hot-toast";
 

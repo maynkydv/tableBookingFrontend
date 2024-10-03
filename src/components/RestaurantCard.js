@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { serverOrigin } from '../utils/constant';
+import serverOrigin from '../utils/constant';
 import { toast } from "react-hot-toast";
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from "react-cookie";
@@ -27,7 +27,7 @@ const RestaurantCard = ({ restaurant, isLoggedIn, isAdmin }) => {
   useEffect(() => {
     const tokenId = cookies.tokenId;
     if (!tokenId) {
-      toast.error('Login First');
+      // toast.error('Login First');
       navigate('/login');
     }
     try {
@@ -56,6 +56,11 @@ const RestaurantCard = ({ restaurant, isLoggedIn, isAdmin }) => {
       toast.error('Please log in to book a table.');
     }
   };
+
+  const handleViewBookings = () => {
+    navigate(`/restaurant/${restaurantId}/bookings`);
+  };
+
 
   const removeRestaurant = async () => {
     if (!isLoggedIn) {
@@ -152,11 +157,28 @@ const RestaurantCard = ({ restaurant, isLoggedIn, isAdmin }) => {
           <div className="font-bold text-xl mb-2">{name}</div>
           <p className="text-gray-600 text-sm mb-2">Location: {location}</p>
           <p className="text-gray-600 text-sm mb-2">Contact: {mobile}</p>
-          <p className="text-gray-700 text-base">Table Available: {tableCount}</p>
+          <p className="text-gray-700 text-base">Total Capacity: {tableCount} Tables</p>
         </div>
 
         {/* Buttons */}
         <div className="px-6 py-4">
+         
+
+          {isAdmin && (
+            <div className="flex flex-col gap-3 pb-2 pt-2">
+              <button onClick={handleViewBookings} className="bg-yellow-400 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded">
+                View Bookings
+              </button>
+            </div>
+          )}
+          {isAdmin && (
+            <div className="flex flex-col gap-3 pb-3 pt-2">
+              <button onClick={removeRestaurant} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                Remove Restaurant
+              </button>
+            </div>
+          )}
+
           <button
             onClick={handleBookingToggle}
             className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded mb-2 w-full"
@@ -164,13 +186,6 @@ const RestaurantCard = ({ restaurant, isLoggedIn, isAdmin }) => {
             {isBookingFormVisible ? 'Discard Booking' : 'Book Now'}
           </button>
 
-          {isAdmin && (
-            <div className="flex flex-col gap-2">
-              <button onClick={removeRestaurant} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
-                Remove Restaurant
-              </button>
-            </div>
-          )}
         </div>
 
         {/* Booking Form */}

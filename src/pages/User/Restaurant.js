@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useCookies } from "react-cookie";
 import {jwtDecode} from "jwt-decode"; 
-import { serverOrigin } from '../../utils/constant';
+import serverOrigin from '../../utils/constant';
 import { toast } from "react-hot-toast";
 
 import RestaurantCard from '../../components/RestaurantCard';

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { jwtDecode } from 'jwt-decode';
 import { toast } from 'react-hot-toast';
-import { serverOrigin } from '../../utils/constant';
+import serverOrigin from '../../utils/constant';
 import { useNavigate } from 'react-router-dom';
 
 

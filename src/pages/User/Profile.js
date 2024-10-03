@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { serverOrigin } from '../../utils/constant';
+import serverOrigin from '../../utils/constant';
 import { toast, } from "react-hot-toast";
 
 const ProfilePage = () => {
