@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { server_origin } from '../../utils/constant';
+import { serverOrigin } from '../../utils/constant';
 import { useNavigate } from 'react-router-dom';
 import { toast, } from "react-hot-toast";
 
@@ -26,7 +26,7 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch(`${server_origin}/user/login`, {
+      const response = await fetch(`${serverOrigin}/user/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

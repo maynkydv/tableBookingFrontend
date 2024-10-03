@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { jwtDecode } from 'jwt-decode';
 import { toast } from 'react-hot-toast';
-import { server_origin } from '../../utils/constant';
+import { serverOrigin } from '../../utils/constant';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -47,7 +47,7 @@ const AdminValid = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch(`${server_origin}/admin/define`, {
+      const response = await fetch(`${serverOrigin}/admin/define`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

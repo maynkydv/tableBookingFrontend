@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { server_origin } from '../../utils/constant';
+import { serverOrigin } from '../../utils/constant';
 import { useNavigate } from 'react-router-dom';
 import { toast, } from "react-hot-toast";
 
@@ -27,7 +27,7 @@ const Register = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch(`${server_origin}/user/register`, {
+      const response = await fetch(`${server_Origin}/user/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

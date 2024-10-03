@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useCookies } from "react-cookie";
 import {jwtDecode} from "jwt-decode"; 
-import { server_origin } from '../../utils/constant';
+import { serverOrigin } from '../../utils/constant';
 import { toast } from "react-hot-toast";
 
 import RestaurantCard from '../../components/RestaurantCard';
@@ -17,7 +17,7 @@ const RestaurantPage = () => {
 
   const fetchRestaurants = async () => {
     try {
-      const response = await fetch(`${server_origin}/user/restaurant`, {
+      const response = await fetch(`${serverOrigin}/user/restaurant`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

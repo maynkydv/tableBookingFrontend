@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { server_origin } from '../../utils/constant';
+import { serverOrigin } from '../../utils/constant';
 import { toast } from 'react-hot-toast';
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
@@ -27,7 +27,7 @@ const AllUsersPage = () => {
 
     const fetchUsers = async () => {
       try {
-        const response = await fetch(`${server_origin}/admin/users`, {
+        const response = await fetch(`${serverOrigin}/admin/users`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { jwtDecode } from 'jwt-decode';
 import { toast } from 'react-hot-toast';
-import { server_origin } from '../../utils/constant';
+import { serverOrigin } from '../../utils/constant';
 import { useNavigate } from 'react-router-dom';
 
 const AddRestaurant = () => {
@@ -33,7 +33,7 @@ const AddRestaurant = () => {
     // Fetch all users from the server
     const fetchUsers = async () => {
       try {
-        const response = await fetch(`${server_origin}/admin/users`, {
+        const response = await fetch(`${serverOrigin}/admin/users`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -63,7 +63,7 @@ const AddRestaurant = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${server_origin}/admin/restaurant`, {
+      const response = await fetch(`${serverOrigin}/admin/restaurant`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

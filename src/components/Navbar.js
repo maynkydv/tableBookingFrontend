@@ -33,7 +33,7 @@ const Navbar = () => {
     navigate("/login");
   };
 
-  return (
+  return (<>
     <nav className="bg-white shadow-md p-4">
       <div className="container mx-auto flex justify-between items-center">
         {/* Left  */}
@@ -93,6 +93,7 @@ const Navbar = () => {
         </div>
       </div>
     </nav>
+  </>
   );
 };
 
