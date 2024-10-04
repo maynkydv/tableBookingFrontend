@@ -15,6 +15,7 @@ const AddRestaurant = () => {
     tableCount: 0,
     userId: '',
   });
+  const [imageFile, setImageFile] = useState(null);
   const [users, setUsers] = useState([]); 
   const navigate = useNavigate();
 
@@ -55,15 +56,65 @@ const AddRestaurant = () => {
     setRestaurantData({ ...restaurantData, [name]: value });
   };
 
+  const handleImageChange = (e) => {
+    setImageFile(e.target.files[0]); 
+  };
+
+  const validateForm = () => {
+
+    if (restaurantData.name.length  === 0 ) {
+      toast.error('Restaurant Name should have Alphabets');
+      return false;
+    }
+    if (restaurantData.name.length  < 5 ) {
+      toast.error('Restaurant Name must be at least 5 characters long.');
+      return false;
+    }
+    if (restaurantData.location.length  < 5 ) {
+      toast.error('Location must be at least 5 characters long.');
+      return false;
+    }
+    if (!/^[a-zA-Z]/.test(restaurantData.name)) {
+      toast.error('Restaurant Name should not start with a number.');
+      return false;
+    }
+    if (restaurantData.tableCount.length < 20) {
+      toast.error('Table Count atmost can be 20 .');
+      return false;
+    }
+    if (restaurantData.tableCount.length > 3) {
+      toast.error('Table Count must be atleast 3.');
+      return false;
+    }
+    if (!/^\d{10}$/.test(restaurantData.mobile)) {
+      toast.error('Mobile number must be a 10-digit number.');
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+    const formData = new FormData(); 
+
+    formData.append('name', restaurantData.name);
+    formData.append('location', restaurantData.location);
+    formData.append('mobile', restaurantData.mobile);
+    formData.append('tableCount', restaurantData.tableCount);
+    formData.append('userId', restaurantData.userId);
+
+    if (imageFile) {
+      formData.append('myImage', imageFile); 
+    }
+
     try {
       const response = await fetch(`${serverOrigin}/admin/restaurant`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(restaurantData),
+        body: formData,
         credentials: 'include',
       });
 
@@ -145,6 +196,16 @@ const AddRestaurant = () => {
                 </option>
               ))}
             </select>
+          </div>
+          <div>
+            <label className="block text-gray-700 font-bold mb-1">Upload Image</label>
+            <input
+              type="file"
+              name="myImage"
+              onChange={handleImageChange}
+              accept="image/*"
+              className="w-full border px-3 py-2 rounded"
+            />
           </div>
           <button
             type="submit"

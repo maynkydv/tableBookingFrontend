@@ -22,8 +22,41 @@ const Register = () => {
     });
   };
 
+  const validateForm = () => {
+
+    if (formData.name.length  === 0 ) {
+      toast.error('Name should have Alphabets');
+      return false;
+    }
+    if (formData.name.length  < 5 ) {
+      toast.error('Name must be at least 5 characters long.');
+      return false;
+    }
+    if (!/^[a-zA-Z]/.test(formData.name)) {
+      toast.error('Name should not start with a number.');
+      return false;
+    }
+    if (formData.email.length < 5 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      toast.error('Email is not valid.');
+      return false;
+    }
+    if (formData.password.length < 5) {
+      toast.error('Password must be at least 5 characters long.');
+      return false;
+    }
+    if (!/^\d{10}$/.test(formData.mobile)) {
+      toast.error('Mobile number must be a 10-digit number.');
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
 
     try {
       const response = await fetch(`${serverOrigin}/user/register`, {

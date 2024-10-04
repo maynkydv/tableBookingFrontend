@@ -5,7 +5,7 @@ import { useAuth } from '../../utils/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 const ProfilePage = () => {
-  const { authState } = useAuth();
+  const { authState ,checkAuth,logout } = useAuth();
   const navigate = useNavigate();
 
   const [isEditing, setIsEditing] = useState(false);
@@ -19,13 +19,15 @@ const ProfilePage = () => {
 
   
   useEffect(() => {
+    checkAuth();
     if(!(authState.isLoggedIn)){
+      console.log('problem', authState)
       toast.error('To View Profile Login First');
       return navigate('/login');
     }
     const fetchUserDetails = async () => {
       try {
-        const response = await fetch(`${serverOrigin}/user/`, {
+        const response = await fetch(`${serverOrigin}/user`, {
           method: 'GET',
           credentials: 'include', 
         });
@@ -36,14 +38,14 @@ const ProfilePage = () => {
         }
 
         const userData = await response.json();
-        console.log(userData);
+        // console.log(userData);
         setUserData({
           name: userData.name,
           email: userData.email,
           password: '********',  
           mobile: userData.mobile,
         });
-        console.log(userData);
+        // console.log(userData);
         setBookings(userData.Bookings || []);  
 
       } catch (error) {
@@ -53,7 +55,7 @@ const ProfilePage = () => {
     };
 
     fetchUserDetails();
-  }, []);  
+  }, [navigate , authState.isLoggedIn]);  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -69,7 +71,7 @@ const ProfilePage = () => {
 
   const handleUpdateClick = async () => {
     try {
-      const response = await fetch(`${serverOrigin}/user/update`, {
+      const response = await fetch(`${serverOrigin}/user`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

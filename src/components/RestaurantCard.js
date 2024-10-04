@@ -10,16 +10,19 @@ const RestaurantCard = ({ restaurant }) => {
   const { authState, logout } = useAuth();
   const [cookies] = useCookies(["tokenId"]);
 
-  const { restaurantId, name, location, mobile, tableCount } = restaurant;
+  let { restaurantId, name, location, mobile, tableCount } = restaurant;
   // console.log(restaurant);
   const navigate = useNavigate();
+
+  const imageName = name.replace(/\s+/g, '_').toLowerCase();
+  const imageUrl = `${serverOrigin}/image/${imageName}.png`;
 
   const [isBookingFormVisible, setBookingFormVisible] = useState(false);
   const [formData, setFormData] = useState({
     restaurantId: restaurantId,
     restaurantName: name,
     userId: '',
-    userName: '',
+    userName: authState.userName,
     date: '',
     startTime: '',
     endTime: '',
@@ -152,6 +155,12 @@ const RestaurantCard = ({ restaurant }) => {
   return (
     <>
       <div className="max-w-sm rounded overflow-hidden shadow-lg bg-white">
+        {/* Image */}
+        <img
+          className="w-full h-48 object-cover"
+          src={imageUrl || `${serverOrigin}/image/default_placeholder.png`}
+          alt={name || 'Restaurant'}
+        />
         <div className="px-6 py-4">
           <div className="font-bold text-xl mb-2">{name}</div>
           <p className="text-gray-600 text-sm mb-2">Location: {location}</p>
@@ -161,7 +170,7 @@ const RestaurantCard = ({ restaurant }) => {
 
         {/* Buttons */}
         <div className="px-6 py-4">
-         
+
 
           {authState.isAdmin && (
             <div className="flex flex-col gap-3 pb-2 pt-2">

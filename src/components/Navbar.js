@@ -4,7 +4,7 @@ import { FaUserCircle } from "react-icons/fa";
 import { useAuth } from '../utils/AuthContext';
 
 const Navbar = () => {
-  const { authState, logout } = useAuth();
+  const { authState, checkAuth , logout } = useAuth();
   const handleLogout = () => {
     logout();
   };

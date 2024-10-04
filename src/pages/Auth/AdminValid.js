@@ -35,7 +35,7 @@ const AdminValid = () => {
       return navigate('/login');
     }
 
-  },[authState.isAdmin]);
+  },[]);
 
 
   const handleSubmit = async (e) => {

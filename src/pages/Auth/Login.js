@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import serverOrigin from '../../utils/constant';
 import { useNavigate } from 'react-router-dom';
 import { toast, } from "react-hot-toast";
+import { useAuth } from '../../utils/AuthContext';
 
 
 const Login = () => {
+  const { authState, checkAuth , logout } = useAuth();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -20,8 +22,25 @@ const Login = () => {
     });
   };
 
+  const validateForm = () => {
+    console.log(formData);
+    if (formData.email.length < 5|| !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      toast.error('Email is not valid.');
+      return false;
+    }
+    else if (formData.password.length < 5) {
+      toast.error('Password must be at least 5 characters long.');
+      return false;
+    }
+    return true; 
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if(!validateForm()){
+      return ;
+    }
 
     try {
       const response = await fetch(`${serverOrigin}/user/login`, {
@@ -50,6 +69,7 @@ const Login = () => {
       console.log('User Logged In successfully:', userData);
       toast.success('User logged in successfully!');
 
+      checkAuth();
       navigate("/");
 
     } catch (error) {

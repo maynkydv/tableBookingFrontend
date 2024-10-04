@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 
 const AuthContext = createContext();
 
@@ -14,8 +14,7 @@ export const AuthProvider = ({ children }) => {
     role: null,
   });
 
-
-  useEffect(() => {
+  const checkAuth = () => {
     setCookie('working', 'authContext_dummy_token'); // just to check 
     if (cookies.tokenId) {
       try {
@@ -23,7 +22,7 @@ export const AuthProvider = ({ children }) => {
         setAuthState({
           isLoggedIn: true,
           isAdmin: decodedToken.role === 'admin',
-          userId: decodedToken.userId,    
+          userId: decodedToken.userId,
           userName: decodedToken.userName,
           role: decodedToken.role,
         });
@@ -37,10 +36,18 @@ export const AuthProvider = ({ children }) => {
           role: null,
         });
       }
+    } else {
+      setAuthState({
+        isLoggedIn: false,
+        isAdmin: false,
+        userId: null,
+        userName: null,
+        role: null,
+      });
     }
-  }, [cookies.tokenId]);
+  }
 
-  
+
   const logout = () => {
     removeCookie('tokenId');
     setAuthState({
@@ -52,11 +59,17 @@ export const AuthProvider = ({ children }) => {
     });
   };
 
+  if (authState === null) {
+    return <div>Loading...</div>;
+  }
+
   return (
-    <AuthContext.Provider value={{ authState, setAuthState, logout }}>
+    <AuthContext.Provider value={{ authState, checkAuth, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
 export const useAuth = () => useContext(AuthContext);
+
+
