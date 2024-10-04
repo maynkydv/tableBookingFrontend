@@ -1,33 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import { useCookies } from 'react-cookie';
-import { jwtDecode } from 'jwt-decode';
 import { toast } from 'react-hot-toast';
 import serverOrigin from '../../utils/constant';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../utils/AuthContext';
+
 
 const AddRestaurant = () => {
-  const [cookies] = useCookies(['tokenId']);
+  const { authState, logout } = useAuth();
+
   const [restaurantData, setRestaurantData] = useState({
     name: '',
     location: '',
     mobile: '',
     tableCount: 0,
-    userId: 0,
+    userId: '',
   });
-  const [users, setUsers] = useState([]); // State to store users
+  const [users, setUsers] = useState([]); 
   const navigate = useNavigate();
-  let isAdmin = false;
 
   useEffect(() => {
-    const tokenId = cookies.tokenId;
-    if (tokenId) {
-      const decodedToken = jwtDecode(tokenId);
-      isAdmin = decodedToken.role === 'admin';
-    }
 
-    if (!isAdmin) {
-      toast.error('Unauthorized: Only admin can access');
-      navigate('/');
+    if (!(authState.isAdmin)) {
+      toast.error('Unauthorized! Only admin can access');
+      return navigate('/');
     }
 
     // Fetch all users from the server
@@ -53,7 +48,7 @@ const AddRestaurant = () => {
     };
 
     fetchUsers();
-  }, [cookies.tokenId, navigate]);
+  }, [authState.isAdmin]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

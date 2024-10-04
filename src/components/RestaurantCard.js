@@ -2,11 +2,14 @@ import React, { useState, useEffect } from "react";
 import serverOrigin from '../utils/constant';
 import { toast } from "react-hot-toast";
 import { useNavigate } from 'react-router-dom';
-import { useCookies } from "react-cookie";
-import { jwtDecode } from "jwt-decode";
+import { useAuth } from '../utils/AuthContext';
+import { useCookies } from 'react-cookie';
 
-const RestaurantCard = ({ restaurant, isLoggedIn, isAdmin }) => {
-  const [cookies, setCookie, removeCookie] = useCookies(["tokenId"]);
+
+const RestaurantCard = ({ restaurant }) => {
+  const { authState, logout } = useAuth();
+  const [cookies] = useCookies(["tokenId"]);
+
   const { restaurantId, name, location, mobile, tableCount } = restaurant;
   // console.log(restaurant);
   const navigate = useNavigate();
@@ -25,17 +28,12 @@ const RestaurantCard = ({ restaurant, isLoggedIn, isAdmin }) => {
 
 
   useEffect(() => {
-    const tokenId = cookies.tokenId;
-    if (!tokenId) {
-      // toast.error('Login First');
-      navigate('/login');
-    }
+
     try {
-      const decodedToken = jwtDecode(tokenId);
       setFormData({
         ...formData,
-        userId: decodedToken.userId,
-        userName: decodedToken.userName,
+        userId: authState.userId,
+        userName: authState.userName,
       });
     } catch (error) {
       console.error("Invalid token", error);
@@ -50,10 +48,11 @@ const RestaurantCard = ({ restaurant, isLoggedIn, isAdmin }) => {
   };
 
   const handleBookingToggle = () => {
-    if (isLoggedIn) {
+    if (authState.isLoggedIn) {
       setBookingFormVisible((prev) => !prev);
     } else {
       toast.error('Please log in to book a table.');
+      // navigate('/');
     }
   };
 
@@ -63,11 +62,11 @@ const RestaurantCard = ({ restaurant, isLoggedIn, isAdmin }) => {
 
 
   const removeRestaurant = async () => {
-    if (!isLoggedIn) {
+    if (!(authState.isLoggedIn)) { // will never be called
       toast.error('Please log in to remove a restaurant.');
       return;
     }
-    if (!isAdmin) {
+    if (!(authState.isAdmin)) {
       toast.error('Unauthorized for normal User');
       return;
     }
@@ -105,7 +104,7 @@ const RestaurantCard = ({ restaurant, isLoggedIn, isAdmin }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!isLoggedIn) {
+    if (!(authState.isLoggedIn)) {
       toast.error('Please log in to book a table.');
       return;
     }
@@ -164,14 +163,14 @@ const RestaurantCard = ({ restaurant, isLoggedIn, isAdmin }) => {
         <div className="px-6 py-4">
          
 
-          {isAdmin && (
+          {authState.isAdmin && (
             <div className="flex flex-col gap-3 pb-2 pt-2">
               <button onClick={handleViewBookings} className="bg-yellow-400 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded">
                 View Bookings
               </button>
             </div>
           )}
-          {isAdmin && (
+          {authState.isAdmin && (
             <div className="flex flex-col gap-3 pb-3 pt-2">
               <button onClick={removeRestaurant} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
                 Remove Restaurant

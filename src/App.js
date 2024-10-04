@@ -14,40 +14,46 @@ import AdminValid from './pages/Auth/AdminValid';
 import AllUsersPage from './pages/Admin/AllUsers';
 import RestaurantBookings from './pages/Admin/RestaurantBookings';
 
+import { AuthProvider } from './utils/AuthContext';
+
 function App() {
 
   return (
-    <Router>
-      <div>
-        <Toaster toastOptions={{ duration: 4000 }} />
-        <Navbar />
-        <Routes>
-        {/* User */}
-          <Route path="/" element={<Home/>} />
-          <Route path="/home" element={<Home/>} />
-          <Route path="/login" element={<Login/>} />
-          <Route path="/register" element={<Register/>} />
-          <Route path="/profile" element={<Profile/>} />
-          <Route path="/restaurants" element={<Restaurant/>} />
-          <Route path="/booking" element={<BookingForm/>} />
-          <Route path="/validate" element={<AdminValid/>} />
+    <AuthProvider>
+      <Router>
+        <div>
+          <Toaster toastOptions={{ duration: 4000 }} />
+          <Navbar />
+          <Routes>
+            {/* User */}
+            <Route path="/" element={<Home />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/restaurants" element={<Restaurant />} />
+            <Route path="/booking" element={<BookingForm />} />
+            <Route path="/validate" element={<AdminValid />} />
 
 
-          {/* Admin */}
-          <Route path="/add-restaurant" element={<AddRestaurant />} />
+            {/* Admin */}
+            {/* Admin Routes */}
+            <Route path="/add-restaurant" element={<AddRestaurant />} />
+            <Route path="/users" element={<AllUsersPage />} />
+            <Route path="/restaurant/:restaurantId/bookings" element={<RestaurantBookings />} />
+            {/* <Route path="/add-restaurant" element={<AddRestaurant />} />
           <Route path="/users" element={<AllUsersPage />} />
-          <Route path="/restaurant/:restaurantId/bookings" element={<RestaurantBookings />} />
+          <Route path="/restaurant/:restaurantId/bookings" element={<RestaurantBookings />} /> */}
 
-          {/* <Route path="/edit-restaurant" element={<Home />} />
+            {/* <Route path="/edit-restaurant" element={<Home />} />
           <Route path="/admin/users" element={<Home />} /> */}
 
-          {/*Testing */}
-          <Route path="/test/booking" element={<BookingForm />} />
-
-          
-        </Routes>
-      </div>
-    </Router>
+            {/*Testing */}
+            <Route path="/test/booking" element={<BookingForm />} />
+          </Routes>
+        </div>
+      </Router>
+    </AuthProvider>
   );
 }
 

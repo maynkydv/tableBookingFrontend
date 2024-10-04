@@ -1,24 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useCookies } from "react-cookie";
-import { jwtDecode } from "jwt-decode";
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from '../../utils/AuthContext';
+
 
 const Home = () => {
-  const [cookies] = useCookies(["tokenId"]);
-  const [role, setRole] = useState(null);
+  const { authState } = useAuth();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const tokenId = cookies.tokenId;
-    if (tokenId) {
-      try {
-        const decodedToken = jwtDecode(tokenId);
-        setRole(decodedToken.role);
-      } catch (error) {
-        console.error("Invalid token", error);
-      }
-    }
-  }, [cookies]);
 
   const handleBookTableClick = () => {
     navigate("/restaurants");
@@ -44,7 +31,7 @@ const Home = () => {
         </button>
 
 
-        {role === "admin" && (
+        {authState.isAdmin && (
           <button
             onClick={handleAddRestaurantClick}
             className="w-full mb-6 py-3 px-6 text-lg font-semibold text-white bg-blue-500 rounded-full shadow-lg"

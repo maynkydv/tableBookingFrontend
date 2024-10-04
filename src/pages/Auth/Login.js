@@ -5,6 +5,8 @@ import { toast, } from "react-hot-toast";
 
 
 const Login = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -17,10 +19,6 @@ const Login = () => {
       [name]: value,
     });
   };
-
-
-  const navigate = useNavigate();
-  //     navigate("/");
 
   const handleSubmit = async (e) => {
     e.preventDefault();

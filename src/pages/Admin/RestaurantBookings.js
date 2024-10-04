@@ -2,26 +2,20 @@ import React, { useEffect, useState } from 'react';
 import serverOrigin from '../../utils/constant';
 import { toast } from 'react-hot-toast';
 import { useNavigate ,useParams } from "react-router-dom";
-import { useCookies } from "react-cookie";
-import { jwtDecode } from "jwt-decode";
+import { useAuth } from '../../utils/AuthContext';
+
 
 
 const RestaurantBookings = () => {
-  const { restaurantId } = useParams(); 
-  const [cookies, setCookie, removeCookie] = useCookies(["tokenId"]);
+  const { authState, logout } = useAuth();
+
+  const { restaurantId } = useParams();   
   const [bookings, setBookings] = useState([]);
-  // const [isAdmin , setIsAdmin] = useState(false);
   const navigate = useNavigate();
-  let isAdmin = false;
 
   useEffect(() => {
-    const tokenId = cookies.tokenId;
-    if (tokenId) {
-      const decodedToken = jwtDecode(tokenId);
-      isAdmin = (decodedToken.role == 'admin');
-    }
 
-    if (!isAdmin) {
+    if (!(authState.isAdmin)) {
       toast.error('Unauthorized: Only admin can access');
       return navigate('/');
     }

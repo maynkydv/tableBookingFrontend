@@ -1,36 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useCookies } from "react-cookie";
-import { jwtDecode } from "jwt-decode";
+import { Link } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
+import { useAuth } from '../utils/AuthContext';
 
 const Navbar = () => {
-  const [cookies, setCookie, removeCookie] = useCookies(["tokenId"]);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [role, setRole] = useState(null);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const tokenId = cookies.tokenId;
-    if (tokenId) {
-      setIsLoggedIn(true);
-
-      try {
-        const decodedToken = jwtDecode(tokenId);
-        setRole(decodedToken.role);
-      } catch (error) {
-        console.error("Invalid token", error);
-      }
-    } else {
-      setIsLoggedIn(false);
-    }
-  }, [cookies]);
-
+  const { authState, logout } = useAuth();
   const handleLogout = () => {
-    removeCookie("tokenId"); // Remove token from cookies
-    setRole(null);
-    setIsLoggedIn(false);
-    navigate("/login");
+    logout();
   };
 
   return (<>
@@ -45,7 +21,7 @@ const Navbar = () => {
             Restaurants
           </Link>
 
-          {(role) && (role === 'admin') && (
+          {authState.isLoggedIn && authState.isAdmin && (
             <>
               <Link to="/add-restaurant" className="flex items-center text-lg text-blue-600 font-bold hover:text-gray-900">
                 Add Restaurant
@@ -58,13 +34,13 @@ const Navbar = () => {
 
         {/* Right */}
         <div className="flex items-center space-x-6">
-          {isLoggedIn && (
+          {authState.isLoggedIn && (
             <span className="text-blue-600 font-bold">
-              {role.charAt(0).toUpperCase() + role.slice(1)} {/* Capitalize the role */}
+              {authState.role.charAt(0).toUpperCase() + authState.role.slice(1)} {/* Capitalize the role */}
             </span>
           )}
 
-          {!isLoggedIn ? (
+          {!(authState.isLoggedIn) ? (
             <>
               <Link to="/login" className="text-gray-700 text-lg font-semibold hover:text-gray-900">
                 Login
@@ -82,7 +58,7 @@ const Navbar = () => {
             </button>
           )}
 
-          {isLoggedIn && (
+          {authState.isLoggedIn && (
             <Link
               to="/profile"
               className="flex items-center text-gray-700 text-lg font-semibold hover:text-gray-900"

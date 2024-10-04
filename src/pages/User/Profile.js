@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import serverOrigin from '../../utils/constant';
 import { toast, } from "react-hot-toast";
+import { useAuth } from '../../utils/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const ProfilePage = () => {
+  const { authState, logout } = useAuth();
+  const navigate = useNavigate();
+
   const [isEditing, setIsEditing] = useState(false);
   const [userData, setUserData] = useState({
     name: '',
@@ -14,6 +19,10 @@ const ProfilePage = () => {
 
   
   useEffect(() => {
+    if(!(authState.isLoggedIn)){
+      toast.error('To View Profile Login First');
+      return navigate('/login');
+    }
     const fetchUserDetails = async () => {
       try {
         const response = await fetch(`${serverOrigin}/user/`, {

@@ -6,21 +6,18 @@ import { useCookies } from "react-cookie";
 import { jwtDecode } from "jwt-decode";
 
 
+import { useAuth } from '../../utils/AuthContext';
+
+
+
 const AllUsersPage = () => {
-  const [cookies, setCookie, removeCookie] = useCookies(["tokenId"]);
+  const { authState, logout } = useAuth();
   const [users, setUsers] = useState([]);
-  // const [isAdmin , setIsAdmin] = useState(false);
   const navigate = useNavigate();
-  let isAdmin = false;
 
   useEffect(() => {
-    const tokenId = cookies.tokenId;
-    if (tokenId) {
-      const decodedToken = jwtDecode(tokenId);
-      isAdmin = (decodedToken.role == 'admin');
-    }
 
-    if (!isAdmin) {
+    if (!(authState.isAdmin)) {
       toast.error('Unauthorized: Only admin can access');
       return navigate('/');
     }
@@ -47,7 +44,7 @@ const AllUsersPage = () => {
     };
 
     fetchUsers();
-  }, []);
+  }, [authState.isAdmin]);
 
   return (
     <div className="container mx-auto p-6">

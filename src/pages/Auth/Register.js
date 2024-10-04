@@ -5,6 +5,8 @@ import { toast, } from "react-hot-toast";
 
 
 const Register = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -20,9 +22,6 @@ const Register = () => {
     });
   };
 
-  const navigate = useNavigate();
-  //     navigate("/login");
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -33,6 +32,7 @@ const Register = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
+        credentials: 'include'
       });
       if (!response.ok) {
         const errorData = await response.json();
@@ -42,8 +42,9 @@ const Register = () => {
       const userData = await response.json();
 
       console.log('User created successfully:', userData);
-      toast.success('User registration successful!, Please Login Now');
-      navigate("/login");
+      toast.success('User registration successful!, Also LoggedIn');
+      // navigate("/login");
+      navigate("/");
 
     } catch (error) {
       console.error('Error during registration:', error.message);

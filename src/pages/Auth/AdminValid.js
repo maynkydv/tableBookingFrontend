@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { useCookies } from 'react-cookie';
-import { jwtDecode } from 'jwt-decode';
 import { toast } from 'react-hot-toast';
 import serverOrigin from '../../utils/constant';
 import { useNavigate } from 'react-router-dom';
 
+import { useAuth } from '../../utils/AuthContext';
+
+
 
 const AdminValid = () => {
+  const { authState, logout } = useAuth();
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     ADMIN_KEY:''
   });
@@ -19,29 +23,20 @@ const AdminValid = () => {
     });
   };
 
-  const [cookies] = useCookies(['tokenId']);
-
-  let isCutomer = false ;
 
   useEffect(() => {  
     
-    const tokenId = cookies.tokenId;
-    if (tokenId) {
-      const decodedToken = jwtDecode(tokenId);
-      isCutomer = (decodedToken.role === 'customer') ;
+    if(authState.isAdmin){
+      toast.error('Unauthorized! You already have Admin Access');
+      return navigate('/');
+    }
+    if(!(authState.isLoggedIn)){
+      toast.error('Please login First to Validate Admin Accessibility');
+      return navigate('/login');
     }
 
-    if(!isCutomer){
-      // console.log(isAdmin );
-      toast.error('Unauthorized: You already have Admin Access');
-      navigate('/');
-    }
+  },[authState.isAdmin]);
 
-  },[cookies]);
-
-
-  const navigate = useNavigate();
-  //     navigate("/");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
