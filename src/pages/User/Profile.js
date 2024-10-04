@@ -5,7 +5,7 @@ import { useAuth } from '../../utils/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 const ProfilePage = () => {
-  const { authState, logout } = useAuth();
+  const { authState } = useAuth();
   const navigate = useNavigate();
 
   const [isEditing, setIsEditing] = useState(false);
