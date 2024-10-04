@@ -33,6 +33,7 @@ const RestaurantCard = ({ restaurant }) => {
   useEffect(() => {
 
     try {
+      
       setFormData({
         ...formData,
         userId: authState.userId,
@@ -111,6 +112,7 @@ const RestaurantCard = ({ restaurant }) => {
       toast.error('Please log in to book a table.');
       return;
     }
+    console.log(authState);
 
     try {
       console.log(formData);
@@ -125,6 +127,7 @@ const RestaurantCard = ({ restaurant }) => {
 
       if (!response.ok) {
         const errorData = await response.json();
+        console.log(errorData);
         throw new Error(errorData.message || 'Failed to create booking');
       }
 

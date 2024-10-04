@@ -2,11 +2,9 @@ import React, { useState } from 'react';
 import serverOrigin from '../../utils/constant';
 import { useNavigate } from 'react-router-dom';
 import { toast, } from "react-hot-toast";
-import { useAuth } from '../../utils/AuthContext';
 
 
 const Login = () => {
-  const { authState, checkAuth , logout } = useAuth();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -68,8 +66,6 @@ const Login = () => {
 
       console.log('User Logged In successfully:', userData);
       toast.success('User logged in successfully!');
-
-      checkAuth();
       navigate("/");
 
     } catch (error) {

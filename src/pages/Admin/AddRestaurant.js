@@ -78,7 +78,7 @@ const AddRestaurant = () => {
       toast.error('Restaurant Name should not start with a number.');
       return false;
     }
-    if (restaurantData.tableCount.length < 20) {
+    if (restaurantData.tableCount.length > 20) {
       toast.error('Table Count atmost can be 20 .');
       return false;
     }

@@ -5,7 +5,7 @@ import { useAuth } from '../../utils/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 const ProfilePage = () => {
-  const { authState ,checkAuth,logout } = useAuth();
+  const { authState ,logout } = useAuth();
   const navigate = useNavigate();
 
   const [isEditing, setIsEditing] = useState(false);
@@ -19,7 +19,6 @@ const ProfilePage = () => {
 
   
   useEffect(() => {
-    checkAuth();
     if(!(authState.isLoggedIn)){
       console.log('problem', authState)
       toast.error('To View Profile Login First');
