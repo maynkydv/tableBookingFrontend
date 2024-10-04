@@ -4,10 +4,14 @@ import { toast } from 'react-hot-toast';
 import { useNavigate ,useParams } from "react-router-dom";
 import { useAuth } from '../../utils/AuthContext';
 
+// import { useCookies } from 'react-cookie';
+
+
 
 
 const RestaurantBookings = () => {
   const { authState, logout } = useAuth();
+  // const [cookies] = useCookies(["tokenId"]);
 
   const { restaurantId } = useParams();   
   const [bookings, setBookings] = useState([]);
@@ -31,7 +35,10 @@ const RestaurantBookings = () => {
         });
 
         if (!response.ok) {
-          throw new Error('Failed to fetch booking');
+          const errorData = await response.json();
+          // console.log(errorData);
+          const errorMessage = errorData.errors ? errorData.errors[0] : 'Failed to Fetch Restaurant Bookings ';
+          throw new Error(errorMessage);
         }
 
         const data = await response.json();

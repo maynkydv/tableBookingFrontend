@@ -14,11 +14,23 @@ const AllUsersPage = () => {
   const { authState, logout } = useAuth();
   const [users, setUsers] = useState([]);
   const navigate = useNavigate();
+  const [cookies] = useCookies(["tokenId"]);
+  let isAdmin = false;
 
   useEffect(() => {
 
-    if (!(authState.isAdmin)) {
-      toast.error('Unauthorized: Only admin can access');
+    const tokenId = cookies.tokenId;
+
+    if(!(tokenId)){
+      toast.error('Please login First to View All users');
+      return navigate('/login');
+    }
+    else{
+      const decodedToken = jwtDecode(tokenId);
+      isAdmin = (decodedToken.role == 'admin');
+    }
+    if(!isAdmin){
+      toast.error('Unauthorized! You need to have Admin Access');
       return navigate('/');
     }
 
@@ -33,7 +45,10 @@ const AllUsersPage = () => {
         });
 
         if (!response.ok) {
-          throw new Error('Failed to fetch users');
+          const errorData = await response.json();
+          // console.log(errorData);
+          const errorMessage = errorData.errors ? errorData.errors[0] : 'Failed to Fetch all User';
+          throw new Error(errorMessage);
         }
 
         const data = await response.json();

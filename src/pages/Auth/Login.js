@@ -58,8 +58,11 @@ const Login = () => {
         } else if (response.status === 401) {
           throw new Error('Invalid password');
         } else {
-          throw new Error(errorData.message || 'Failed to login');
+          // console.log(errorData);
+          const errorMessage = errorData.errors ? errorData.errors[0] : 'Failed to Login';
+          throw new Error(errorMessage);
         }
+    
       }
 
       const userData = await response.json();

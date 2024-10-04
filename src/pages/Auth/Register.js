@@ -69,7 +69,9 @@ const Register = () => {
       });
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to create user');
+        // console.log(errorData);
+        const errorMessage = errorData.errors ? errorData.errors[0] : 'Failed to create user';
+        throw new Error(errorMessage);
       }
 
       const userData = await response.json();

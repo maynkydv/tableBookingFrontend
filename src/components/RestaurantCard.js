@@ -92,7 +92,9 @@ const RestaurantCard = ({ restaurant }) => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to delete restaurant');
+        // console.log(errorData);
+        const errorMessage = errorData.errors ? errorData.errors[0] : 'Failed to Delete Restaurant';
+        throw new Error(errorMessage);
       }
 
       const result = await response.json();
@@ -127,8 +129,9 @@ const RestaurantCard = ({ restaurant }) => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.log(errorData);
-        throw new Error(errorData.message || 'Failed to create booking');
+        // console.log(errorData);
+        const errorMessage = errorData.errors ? errorData.errors[0] : 'Failed to create booking';
+        throw new Error(errorMessage);
       }
 
 
@@ -161,7 +164,8 @@ const RestaurantCard = ({ restaurant }) => {
         {/* Image */}
         <img
           className="w-full h-48 object-cover"
-          src={imageUrl || `${serverOrigin}/image/default_placeholder.png`}
+          src={imageUrl}
+          onError={(e) => { e.target.onerror = null; e.target.src = `${serverOrigin}/image/default_placeholder.png`; }}
           alt={name || 'Restaurant'}
         />
         <div className="px-6 py-4">

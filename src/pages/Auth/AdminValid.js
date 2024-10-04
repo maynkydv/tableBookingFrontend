@@ -4,11 +4,17 @@ import serverOrigin from '../../utils/constant';
 import { useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../../utils/AuthContext';
+import { useCookies } from 'react-cookie';
+import {jwtDecode} from 'jwt-decode';
 
 
 
 const AdminValid = () => {
   const { authState, logout } = useAuth();
+  const [cookies] = useCookies(["tokenId"]);
+  let isAdmin = false;
+  
+
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -23,17 +29,24 @@ const AdminValid = () => {
     });
   };
 
+  
 
-  useEffect(() => {  
-    
-    if(authState.isAdmin){
-      toast.error('Unauthorized! You already have Admin Access');
-      return navigate('/');
-    }
-    if(!(authState.isLoggedIn)){
+  useEffect(() => { 
+    const tokenId = cookies.tokenId;
+
+    if(!(tokenId)){
       toast.error('Please login First to Validate Admin Accessibility');
       return navigate('/login');
     }
+    else{
+      const decodedToken = jwtDecode(tokenId);
+      isAdmin = (decodedToken.role == 'admin');
+    }
+    if(isAdmin){
+      toast.error('Unauthorized! You already have Admin Access');
+      return navigate('/');
+    }
+
 
   },[]);
 

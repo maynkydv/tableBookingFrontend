@@ -4,9 +4,14 @@ import serverOrigin from '../../utils/constant';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../utils/AuthContext';
 
+import { useCookies } from 'react-cookie';
+import {jwtDecode} from 'jwt-decode';
 
 const AddRestaurant = () => {
   const { authState, logout } = useAuth();
+
+  const [cookies] = useCookies(["tokenId"]);
+  let isAdmin = false;
 
   const [restaurantData, setRestaurantData] = useState({
     name: '',
@@ -20,9 +25,19 @@ const AddRestaurant = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const tokenId = cookies.tokenId;
 
-    if (!(authState.isAdmin)) {
-      toast.error('Unauthorized! Only admin can access');
+
+    if(!(tokenId)){
+      toast.error('Please login First to Add Restaurant');
+      return navigate('/login');
+    }
+    else{
+      const decodedToken = jwtDecode(tokenId);
+      isAdmin = (decodedToken.role == 'admin');
+    }
+    if(!isAdmin){
+      toast.error('Unauthorized! You cannot add Restaurant');
       return navigate('/');
     }
 
@@ -120,7 +135,9 @@ const AddRestaurant = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to add restaurant');
+        // console.log(errorData);
+        const errorMessage = errorData.errors ? errorData.errors[0] : 'Failed to Add Restaurant';
+        throw new Error(errorMessage);
       }
 
       toast.success('Restaurant added successfully');

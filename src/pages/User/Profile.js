@@ -4,7 +4,12 @@ import { toast, } from "react-hot-toast";
 import { useAuth } from '../../utils/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
+import { useCookies } from 'react-cookie';
+
+
+
 const ProfilePage = () => {
+  const [cookies, setCookie, removeCookie] = useCookies(['tokenId']);
   const { authState ,logout } = useAuth();
   const navigate = useNavigate();
 
@@ -19,8 +24,7 @@ const ProfilePage = () => {
 
   
   useEffect(() => {
-    if(!(authState.isLoggedIn)){
-      console.log('problem', authState)
+    if(!cookies.tokenId){
       toast.error('To View Profile Login First');
       return navigate('/login');
     }
@@ -33,9 +37,10 @@ const ProfilePage = () => {
 
         if (!response.ok) {
           const errorData = await response.json();
-          throw new Error(errorData.message || 'Failed to fetch user data');
+          // console.log(errorData);
+          const errorMessage = errorData.errors ? errorData.errors[0] : 'Failed to fetch user data';
+          throw new Error(errorMessage);
         }
-
         const userData = await response.json();
         // console.log(userData);
         setUserData({
